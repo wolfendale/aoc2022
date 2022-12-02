@@ -1,32 +1,31 @@
-import scala.annotation.tailrec
+import cats.data.NonEmptyList
+import cats.implicits._
 
 object Day1 {
 
-  def part1(lines: List[Int]): Int =
-    lines match {
-      case a :: b :: xs if a < b => part1(b :: xs) + 1
-      case _ :: a :: xs          => part1(a :: xs)
-      case _                     => 0
-    }
+  def mostCalories(input: String): Int =
+    mostCalories(Parser.parse(input))
 
-  @tailrec
-  def part1tailrec(lines: List[Int], result: Int): Int =
-    lines match {
-      case a :: b :: xs if a < b => part1tailrec(b :: xs, result + 1)
-      case _ :: a :: xs          => part1tailrec(a :: xs, result)
-      case _                     => 0
-    }
+  def mostCalories(input: NonEmptyList[NonEmptyList[Int]]): Int =
+    input.map(_.sumAll).maximum
 
+  def sumOfTop3MostCalories(input: String): Int =
+    sumOfTop3MostCalories(Parser.parse(input))
 
-//  def part1(lines: List[Int]): Int =
-//      lines
-//        .sliding(2, 1)
-//        .count({ case Seq(a, b) => a < b })
+  def sumOfTop3MostCalories(input: NonEmptyList[NonEmptyList[Int]]): Int =
+    input.map(_.sumAll).sortBy(-_).take(3).sum
+}
 
-  def part2(lines: List[Int]): Int =
-    lines
-      .sliding(3, 1)
-      .map(_.sum)
-      .sliding(2, 1)
-      .count({ case Seq(a, b) => a < b})
+object Parser {
+
+  import atto._
+  import Atto._
+
+  private val newline = char('\r') | char('\n')
+
+  def parse(input: String): NonEmptyList[NonEmptyList[Int]] =
+    parser.parseOnly(input).option.get
+
+  private val parser: Parser[NonEmptyList[NonEmptyList[Int]]] =
+    int.sepBy1(newline).sepBy1(manyN(2, newline))
 }

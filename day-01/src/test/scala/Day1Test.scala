@@ -7,55 +7,61 @@ class Day1Test extends AnyFreeSpec with Matchers {
 
   "part 1" - {
 
-    "must return how many scans increase from the previous value" in {
+    "must return the calories carried by the elf with the most calories" in {
 
-      val input = List(
-        199,
-        200,
-        208,
-        210,
-        200,
-        207,
-        240,
-        269,
-        260,
-        263
-      )
+      val input = """1000
+                    |2000
+                    |3000
+                    |
+                    |4000
+                    |
+                    |5000
+                    |6000
+                    |
+                    |7000
+                    |8000
+                    |9000
+                    |
+                    |10000""".stripMargin
 
-      Day1.part1(input) mustEqual 7
+      Day1.mostCalories(input) mustEqual 24000
     }
 
-    "must work for the puzzle input" in {
+    "result" in {
 
-      val input = Source.fromResource("input.txt").getLines().map(_.toInt).toList
-      Day1.part1(input) mustEqual 1581
+      val input = Source.fromResource("input.txt").mkString
+
+      Day1.mostCalories(input) mustEqual 72511
     }
   }
 
   "part 2" - {
 
-    "must return how many sliding sums increase from the previous" in {
+    "must return the sum of the calories carried by the 3 elves with the most calories" in {
 
-      val input = List(
-        199,
-        200,
-        208,
-        210,
-        200,
-        207,
-        240,
-        269,
-        260,
-        263
-      )
+      val input = """1000
+                    |2000
+                    |3000
+                    |
+                    |4000
+                    |
+                    |5000
+                    |6000
+                    |
+                    |7000
+                    |8000
+                    |9000
+                    |
+                    |10000""".stripMargin
 
-      Day1.part2(input) mustEqual 5
+      Day1.sumOfTop3MostCalories(input) mustEqual 45000
     }
 
-    "must work for the puzzle input" in {
+    "result" in {
 
-      val input = Source.fromResource("input.txt").getLines().map(_.toInt).toList
-      Day1.part2(input) mustEqual 1618
+      val input = Source.fromResource("input.txt").mkString
+
+      Day1.sumOfTop3MostCalories(input) mustEqual 0
     }
   }
 }
