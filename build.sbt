@@ -29,3 +29,9 @@ lazy val dayTwo = (project in file("day-02"))
     name := "day two",
     commonSettings
   )
+
+lazy val dayTwoMod = (project in file("day-02-mod"))
+  .settings(
+    name := "day two (mod)",
+    commonSettings
+  )

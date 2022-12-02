@@ -3,7 +3,7 @@ import org.scalatest.matchers.must.Matchers
 
 import scala.io.Source
 
-class Day2Test extends AnyFreeSpec with Matchers {
+class Day2ModTest extends AnyFreeSpec with Matchers {
 
   private val testInput = """A Y
                     |B X
