@@ -7,10 +7,7 @@ import scala.util.chaining.scalaUtilChainingOps
 object Day3 {
 
   def part1(input: String): Int =
-    part1(Parser.parse(input))
-
-  def part1(input: NonEmptyList[Rucksack]): Int =
-    input.map { rucksack =>
+    Parser.parse(input).map { rucksack =>
       (rucksack.firstCompartment.toSet & rucksack.secondCompartment.toSet)
         .head
         .pipe(values)
@@ -18,6 +15,13 @@ object Day3 {
 
   private val values = ('a' to 'z').zip(1 to 26).toMap ++
     ('A' to 'Z').zip(27 to 52).toMap
+
+  def part2(input: String): Int =
+    Parser.parse(input).toList.sliding(3, 3).map { case List(a, b, c) =>
+      (a.items.toSet & b.items.toSet & c.items.toSet)
+        .head
+        .pipe(values)
+    }.sum
 }
 
 object Parser {
@@ -41,4 +45,6 @@ object Parser {
     }
 }
 
-final case class Rucksack(firstCompartment: Seq[Char], secondCompartment: Seq[Char])
+final case class Rucksack(firstCompartment: Seq[Char], secondCompartment: Seq[Char]) {
+  def items: Seq[Char] = firstCompartment ++ secondCompartment
+}

@@ -14,7 +14,7 @@ class Day3Test extends AnyFreeSpec with Matchers {
 
   private val input = Source.fromResource("input.txt").mkString
 
-  "day 1" - {
+  "part 1" - {
 
     "must return the calculated error stats" in {
       Day3.part1(testInput) mustEqual 157
@@ -22,6 +22,17 @@ class Day3Test extends AnyFreeSpec with Matchers {
 
     "return the result" in {
       Day3.part1(input) mustEqual 7845
+    }
+  }
+
+  "part 2" - {
+
+    "must return the sum of the badge values" in {
+      Day3.part2(testInput) mustEqual 70
+    }
+
+    "return the result" in {
+      Day3.part2(input) mustEqual 2790
     }
   }
 }
