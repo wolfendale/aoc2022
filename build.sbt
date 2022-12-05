@@ -48,3 +48,8 @@ lazy val dayFour = (project in file("day-04"))
     commonSettings
   )
 
+lazy val dayFive = (project in file("day-05"))
+  .settings(
+    name := "day five",
+    commonSettings
+  )
