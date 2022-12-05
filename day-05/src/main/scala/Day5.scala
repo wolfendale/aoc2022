@@ -4,23 +4,21 @@ import cats.implicits._
 object Day5 {
 
   def part1(input: String): String =
-    Parse.parse(input).tops.mkString
+    Parse.parse(input)(CrateMover._9000).tops.mkString
+
+  def part2(input: String): String =
+    Parse.parse(input)(CrateMover._9001).tops.mkString
 }
 
 final case class Stacks(stacks: Vector[List[Char]]) {
 
-  def move(from: Int, to: Int): Stacks = {
-    copy(
-      stacks
-        .updated(from - 1, stacks(from - 1).tail)
-        .updated(to - 1, stacks(from - 1).head :: stacks(to - 1))
-    )
-  }
-
-  def move(times: Int, from: Int, to: Int): Stacks =
-    (0 until times).foldLeft(this) { (m, _) => m.move(from, to) }
-
   def tops: Seq[Char] = stacks.flatMap(_.headOption)
+
+  def updated(index: Int, column: List[Char]): Stacks =
+    copy(stacks.updated(index - 1, column))
+
+  def column(index: Int): List[Char] =
+    stacks(index - 1)
 }
 
 object Parse {
@@ -56,18 +54,50 @@ object Parse {
       token(string("from")) ~> token(int),
       token(string("to")) ~> int
     ).mapN { (times, from, to) =>
-      (stacks: Stacks) =>
-        stacks.move(times, from, to)
+      (stacks: Stacks, mover: CrateMover) =>
+        mover.move(stacks, times, from, to)
     }
 
   private val moves = move.sepBy1(newline)
-    .map(_.reduceLeft(_ andThen _))
+    .map { operations =>
+      operations.reduceLeft { (f, g) =>
+        (stacks: Stacks, mover: CrateMover) =>
+          g(f(stacks, mover), mover)
+      }
+    }
 
   private val parser =
     (stacks, manyN(2, newline) ~> moves).mapN { (stacks, operations) =>
-      operations(stacks)
+      (mover: CrateMover) =>
+        operations(stacks, mover)
     }
 
-  def parse(input: String): Stacks =
+  def parse(input: String): CrateMover => Stacks =
     parser.parseOnly(input).option.get
+}
+
+sealed trait CrateMover {
+  def move(stacks: Stacks, times: Int, from: Int, to: Int): Stacks
+}
+
+object CrateMover {
+
+  case object _9000 extends CrateMover {
+
+    def move(stacks: Stacks, from: Int, to: Int): Stacks =
+      stacks
+        .updated(from, stacks.column(from).tail)
+        .updated(to, stacks.column(from).head :: stacks.column(to))
+
+    override def move(stacks: Stacks, times: Int, from: Int, to: Int): Stacks =
+      (0 until times).foldLeft(stacks) { (m, _) => move(m, from, to) }
+  }
+
+  case object _9001 extends CrateMover {
+
+    override def move(stacks: Stacks, times: Int, from: Int, to: Int): Stacks =
+      stacks
+        .updated(from, stacks.column(from).drop(times))
+        .updated(to, stacks.column(from).take(times) ::: stacks.column(to))
+  }
 }

@@ -27,4 +27,15 @@ class Day5Test extends AnyFreeSpec with Matchers {
       Day5.part1(input) mustEqual "TDCHVHJTG"
     }
   }
+
+  "part 2" - {
+
+    "must return y" in {
+      Day5.part2(testInput) mustEqual "MCD"
+    }
+
+    "result" in {
+      Day5.part2(input) mustEqual ""
+    }
+  }
 }
