@@ -5,13 +5,16 @@ import Atto._
 object Day6 {
 
   def part1(input: String): Int =
-    parser.parseOnly(input).option.get
+    parser(4).parseOnly(input).option.get
 
-  private val marker: Parser[Int] =
-    manyN(4, letter).flatMap { letters =>
-      if (letters.toSet.size == 4) pos else err("letters weren't the same")
+  def part2(input: String): Int =
+    parser(14).parseOnly(input).option.get
+
+  private def marker(size: Int): Parser[Int] =
+    manyN(size, letter).flatMap { letters =>
+      if (letters.toSet.size == size) pos else err("letters weren't the same")
     }
 
-  private val parser: Parser[Int] =
-    many(marker.map(_.some) | skip(_ => true).as(None)).map(_.flatten.head)
+  private def parser(markerSize: Int): Parser[Int] =
+    many(marker(markerSize).map(_.some) | skip(_ => true).as(None)).map(_.flatten.head)
 }
