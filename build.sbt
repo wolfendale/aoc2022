@@ -6,6 +6,7 @@ lazy val commonSettings = Seq(
   libraryDependencies ++= Seq(
     "org.typelevel" %% "cats-core" % "2.9.0",
     "org.tpolecat" %% "atto-core" % "0.7.0",
+    "com.softwaremill.quicklens" %% "quicklens" % "1.9.0",
     "org.scalactic" %% "scalactic" % "3.1.0",
     "org.scalatest" %% "scalatest" % "3.1.0" % "test"
   )
@@ -57,5 +58,11 @@ lazy val dayFive = (project in file("day-05"))
 lazy val daySix = (project in file("day-06"))
   .settings(
     name := "day six",
+    commonSettings
+  )
+
+lazy val daySeven = (project in file("day-07"))
+  .settings(
+    name := "day seven",
     commonSettings
   )

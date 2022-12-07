@@ -33,7 +33,7 @@ class Day6Test extends AnyFreeSpec with Matchers {
     }
 
     "must work for the puzzle input" in {
-      Day6.part2(input) mustEqual 0
+      Day6.part2(input) mustEqual 2313
     }
   }
 }
