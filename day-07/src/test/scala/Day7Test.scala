@@ -41,4 +41,15 @@ class Day7Test extends AnyFreeSpec with Matchers {
       Day7.part1(puzzleInput) mustEqual 1770595
     }
   }
+
+  "part 2" - {
+
+    "must work for the test input" in {
+      Day7.part2(testInput) mustEqual 24933642
+    }
+
+    "must work for the puzzle input" in {
+      Day7.part2(puzzleInput) mustEqual 2195372
+    }
+  }
 }

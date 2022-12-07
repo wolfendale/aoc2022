@@ -13,6 +13,19 @@ object Day7 {
       .map(_.size)
       .filter(_ <= 100000)
       .sum
+
+  def part2(input: String): Long = {
+    val console = Day7Parser.parse(input)
+    val usedSpace = console.root.size
+    val freeSpace = 70000000L - usedSpace
+    val minSpaceRequired = 30000000L - freeSpace
+    console
+      .root
+      .directories
+      .map(_.size)
+      .filter(_ >= minSpaceRequired)
+      .min
+  }
 }
 
 sealed trait File extends Product with Serializable {
