@@ -23,4 +23,15 @@ class Day8Test extends AnyFreeSpec with Matchers {
       Day8.part1(puzzleInput) mustEqual 1733
     }
   }
+
+  "part 2" - {
+
+    "must work for the test input" in {
+      Day8.part2(testInput) mustEqual 8
+    }
+
+    "must work for the puzzle input" in {
+      Day8.part2(puzzleInput) mustEqual 284648
+    }
+  }
 }
