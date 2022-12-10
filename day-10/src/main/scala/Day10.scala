@@ -1,21 +1,33 @@
 import cats.implicits._
 
+import scala.util.chaining.scalaUtilChainingOps
+
 object Day10 {
 
   def part1(input: String): Int = {
-
     val wantedCycles = Set(20, 60, 100, 140, 180, 220)
+    run(input)
+      .filter(c => wantedCycles.contains(c.cycle))
+      .map(_.signalStrength)
+      .sum
+  }
 
+  def part2(input: String): String =
+    run(input).foldLeft("") { (m, n) =>
+      val x = n.cycle % 40
+      m + (if (x >= n.x && x <= n.x + 2) "#" else ".")
+    }.grouped(40).mkString("\n").tap(println)
+
+  private def run(input: String): Seq[Computer] =
     Day10Parser.parse(input)
       .scanLeft(Computer(0, 1)) { (computer, op) =>
         op(computer)
-      }.groupBy(_.cycle)
-        .values
-        .flatMap(_.headOption)
-        .filter(c => wantedCycles.contains(c.cycle))
-        .map(_.signalStrength)
-        .sum
-  }
+      }
+      .groupBy(_.cycle)
+      .values
+      .flatMap(_.headOption)
+      .toSeq
+      .sortBy(_.cycle)
 }
 
 final case class Computer(cycle: Int, x: Int) {
