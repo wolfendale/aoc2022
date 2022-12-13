@@ -6,10 +6,24 @@ import scala.util.chaining.scalaUtilChainingOps
 object Day13 {
 
   def part1(input: String): Int = {
-    Day13Parser.parse(input).zipWithIndex.flatMap {
-      case ((a, b), i) if a < b => Some(i + 1)
-      case _                    => None
+    Day13Parser.parsePairs(input).zipWithIndex.collect {
+      case ((a, b), i) if a < b => i + 1
     }.sum
+  }
+
+  private val dividerPackets: Seq[Packet] =
+    Seq(
+      Packet.L(List(Packet.L(List(Packet.N(2))))),
+      Packet.L(List(Packet.L(List(Packet.N(6)))))
+    )
+
+  def part2(input: String): Int = {
+    (Day13Parser.parsePackets(input) ++ dividerPackets)
+      .sorted
+      .zipWithIndex
+      .collect {
+        case (packet, i) if dividerPackets.contains(packet) => i + 1
+      }.product
   }
 }
 
@@ -37,8 +51,8 @@ object Packet {
     a.values.map(_.some).zipAll(b.values.map(_.some), None, None)
       .foldLeft(0) {
         case (m, (_, _)) if m != 0   => m
-        case (_, (Some(_), None))    => 1 // not sure if this is right
-        case (_, (None, Some(_)))    => -1 // not sure if this is right
+        case (_, (Some(_), None))    => 1
+        case (_, (None, Some(_)))    => -1
         case (_, (None, None))       => 0
         case (_, (Some(a), Some(b))) => ordering.compare(a, b)
       }
@@ -58,9 +72,13 @@ object Day13Parser {
   private lazy val packet: Parser[Packet] =
     n | l
 
-  private val parser =
+  private val pairParser =
     pairBy(packet, newline, packet).sepBy(manyN(2, newline))
 
-  def parse(input: String): List[(Packet, Packet)] =
-    parser.parseOnly(input).done.option.get
+  def parsePairs(input: String): List[(Packet, Packet)] =
+    pairParser.parseOnly(input).done.option.get
+
+  def parsePackets(input: String): Seq[Packet] =
+    packet.sepBy(manyN(2, newline) | newline)
+      .parseOnly(input).done.option.get
 }

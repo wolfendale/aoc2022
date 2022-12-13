@@ -41,4 +41,15 @@ class Day13Test extends AnyFreeSpec with Matchers {
       Day13.part1(puzzleInput) mustEqual 5605
     }
   }
+
+  "part 2" - {
+
+    "must work for the test input" in {
+      Day13.part2(testInput) mustEqual 140
+    }
+
+    "must work for the puzzle input" in {
+      Day13.part2(puzzleInput) mustEqual 24969
+    }
+  }
 }
